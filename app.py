@@ -5,10 +5,18 @@ from neo4j import GraphDatabase
 
 load_dotenv()
 
-URI = os.getenv("NEO4J_URI")
-AUTH = (os.getenv("NEO4J_USERNAME"), os.getenv("NEO4J_PASSWORD"))
-DATABASE = os.getenv("NEO4J_DATABASE")
+def obtener_config(clave):
+    try:
+        if clave in st.secrets:
+            return st.secrets[clave]
+    except Exception:
+        pass
+    return os.getenv(clave)
 
+
+URI = obtener_config("NEO4J_URI")
+AUTH = (obtener_config("NEO4J_USERNAME"), obtener_config("NEO4J_PASSWORD"))
+DATABASE = obtener_config("NEO4J_DATABASE")
 
 @st.cache_resource
 def get_driver():
